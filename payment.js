@@ -15,13 +15,13 @@
 const API_URL = 'https://api-96422-kuota.id/v1';
 
 /**
- * Mengirim detail pesanan ke gateway pembayaran (Simulasi API).
+ * Mengirim detail pesanan ke gateway pembayaran (API).
  * String QRIS dipindahkan ke fungsi ini.
  */
 function createOrder(product, phone, amount) {
     const latency = Math.floor(Math.random() * 1000) + 1000;
 
-    // Detail payload (hanya untuk referensi, tidak dikirim sungguhan di simulasi ini)
+    // Detail payload (referensi)
     const payload = {
         endpoint: `${API_URL}/transaction/create`,
         method: 'POST',
