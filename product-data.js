@@ -3,7 +3,7 @@
 // Data Produk
 const products = {
     indosat: [
-        { name: 'Indosat 50GB', price: 55000, desc: '✅ Ready Stock | - Kuota Indosat Aktif 28 Hari<br>- Jaringan 4G/5G seluruh Indonesia<br>- Garansi sesuai masa aktif<br>- Proses cepat otomatis' },
+        { name: 'Indosat 50GB', price: 63000, desc: '✅ Ready Stock | - Kuota Indosat Aktif 28 Hari<br>- Jaringan 4G/5G seluruh Indonesia<br>- Garansi sesuai masa aktif<br>- Proses cepat otomatis' },
         { name: 'Indosat 80GB', price: 95000, desc: '✅ Ready Stock | - Kuota Indosat Aktif 30 Hari<br>- Jaringan 4G/5G seluruh Indonesia<br>- Garansi sesuai masa aktif<br>- Proses cepat otomatis' }
     ],
     telkomsel: [
