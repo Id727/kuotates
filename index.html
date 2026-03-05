@@ -577,11 +577,33 @@
         }, 1000);
     }
     
-    // Fungsi yang menggunakan data 'products' dari product-data.js
-    function toggleProducts(category) {
+    //     function toggleProducts(category) {
         const section = document.getElementById('productSection');
         const allCategories = document.querySelectorAll('.category');
         const currentCategoryElement = document.getElementById(`cat-${category}`);
+
+        // --- LOGIKA STATUS OTOMATIS (4 - 12 JAM) ---
+        let nextChange = localStorage.getItem('nextStatusChange');
+        let currentAutoStatus = localStorage.getItem('currentAutoStatus') || 'Ready';
+        const now = new Date().getTime();
+
+        // Cek apakah sudah waktunya berubah status
+        if (!nextChange || now > nextChange) {
+            const minHours = 4;
+            const maxHours = 12;
+            // Menghitung jam acak antara 4 sampai 12 jam dalam milidetik
+            const randomMs = Math.floor(Math.random() * (maxHours - minHours + 1) + minHours) * 60 * 60 * 1000;
+            
+            nextChange = now + randomMs;
+            // Jika sebelumnya 'Ready' maka ganti 'Habis', dan sebaliknya
+            currentAutoStatus = (currentAutoStatus === 'Ready') ? 'Habis' : 'Ready';
+
+            localStorage.setItem('nextStatusChange', nextChange);
+            localStorage.setItem('currentAutoStatus', currentAutoStatus);
+        }
+
+        const isAutoReady = (currentAutoStatus === 'Ready');
+        // -------------------------------------------
 
         let shouldScroll = true;
 
@@ -597,10 +619,8 @@
         }
 
         activeCategory = category;
-
         allCategories.forEach(cat => cat.classList.remove('active'));
         currentCategoryElement.classList.add('active');
-
         section.innerHTML = '';
 
         if (category === 'xl') {
@@ -613,11 +633,11 @@
         }
 
         products[category].forEach(p => { 
-            const isReady = p.desc.startsWith('✅ Ready Stock');
-            const statusText = isReady ? `<span class='ready-status'>✅ Ready</span>` : `<span class='status-habis'>❌ Habis</span>`;
-            const buttonClass = isReady ? 'buy-btn' : 'buy-btn sold-out-btn';
-            const buttonAction = isReady ? `onclick='openModal(${p.price}, "${p.name}")'` : 'disabled';
+            const statusText = isAutoReady ? `<span class='ready-status'>✅ Ready</span>` : `<span class='status-habis'>❌ Habis</span>`;
+            const buttonClass = isAutoReady ? 'buy-btn' : 'buy-btn sold-out-btn';
+            const buttonAction = isAutoReady ? `onclick='openModal(${p.price}, "${p.name}")'` : 'disabled';
 
+            // Membersihkan teks status manual dari product-data.js secara otomatis
             const rawDesc = p.desc.replace(/✅ Ready Stock \| /, '').replace(/❌ Habis \| /, '');
 
             const div = document.createElement('div');
@@ -625,9 +645,9 @@
 
             div.innerHTML = `
                 <h4><span>${p.name}</span>${statusText}</h4>
-                <p>${rawDesc.replace(/<br>/g, '<br>')}</p>
+                <p>${rawDesc}</p>
                 <p><strong>Harga: Rp ${p.price.toLocaleString('id-ID')}</strong></p>
-                <button class='${buttonClass}' ${buttonAction}>${isReady ? 'Beli Sekarang' : 'Stok Habis'}</button>
+                <button class='${buttonClass}' ${buttonAction}>${isAutoReady ? 'Beli Sekarang' : 'Stok Habis'}</button>
             `;
             section.appendChild(div);
         });
@@ -637,6 +657,7 @@
             section.scrollIntoView({ behavior: 'smooth' });
         }
     }
+
 
     // Fungsi yang menetapkan variabel global yang akan digunakan payment.js
     function openModal(price, productName) {
